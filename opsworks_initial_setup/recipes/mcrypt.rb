@@ -1,4 +1,7 @@
 # install the mcrypt
-package 'php5-mcrypt' do
-    action :install
+bash 'npm_upgrade' do
+  user 'root'
+  code <<-EOH
+apt-get install php5-mcrypt
+    EOH
 end
