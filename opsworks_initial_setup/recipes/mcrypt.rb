@@ -1,5 +1,4 @@
 # install the mcrypt
-php_pear 'Install mcrypt' do
-  package_name 'php5-mcrypt'
-  action :install
+package 'php5-mcrypt' do
+    action :install
 end
