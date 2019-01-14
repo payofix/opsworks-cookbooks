@@ -3,22 +3,7 @@ include_recipe 'apache2'
 node[:mod_php5_apache2][:packages].each do |pkg|
   package pkg do
     action :install
-    ignore_failure(pkg.to_s.match(/^php-pear-/) ? true : false) # some pear packages come from EPEL which is not always available
-    
-    # fix
-    if pkg == 'php5-mcrypt'
-      execute "php5enmod mcrypt" do
-        command "sudo php5enmod mcrypt" 
-        action :run
-      end
-      
-      service "apache2" do
-        action :restart
-      end
-      
-    end
-    #
-    
+    ignore_failure(pkg.to_s.match(/^php-pear-/) ? true : false) # some pear packages come from EPEL which is not always available  
     retries 3
     retry_delay 5
   end
@@ -50,3 +35,4 @@ node[:deploy].each do |application, deploy|
 end
 
 include_recipe 'apache2::mod_php5'
+include_recipe 'mod_php5_apache2:mcrypt'
