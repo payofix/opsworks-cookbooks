@@ -4,6 +4,21 @@ node[:mod_php5_apache2][:packages].each do |pkg|
   package pkg do
     action :install
     ignore_failure(pkg.to_s.match(/^php-pear-/) ? true : false) # some pear packages come from EPEL which is not always available
+    
+    # fix
+    if pkg == 'php5-mcrypt'
+      execute "php5enmod mcrypt" do
+        command "sudo php5enmod mcrypt" 
+        action :run
+      end
+      
+      service "apache2" do
+        action :restart
+      end
+      
+    end
+    #
+    
     retries 3
     retry_delay 5
   end
