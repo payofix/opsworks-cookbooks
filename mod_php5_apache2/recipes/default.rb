@@ -35,4 +35,4 @@ node[:deploy].each do |application, deploy|
 end
 
 include_recipe 'apache2::mod_php5'
-include_recipe 'mod_php5_apache2:mcrypt'
+include_recipe 'mod_php5_apache2::mcrypt'
