@@ -1,12 +1,12 @@
 #
-# install the mcrypt
+# post-install the php5-mcrypt
 #
 
-package 'php5-mcrypt' do
-  package_name value_for_platform_family(
-    'rhel' => 'php-mcrypt',
-    'debian' => 'php5-mcrypt'
-  )
-  retries 3
-  retry_delay 5
+execute "php5enmod mcrypt" do
+  command "sudo php5enmod mcrypt" 
+  action :run
+end
+
+service "apache2" do
+  action :restart
 end
