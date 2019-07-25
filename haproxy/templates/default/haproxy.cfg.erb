@@ -12,6 +12,7 @@ global
   <% else %>
   stats socket <%= node[:haproxy][:stats_socket_path] %>
   <% end %>
+  tune.ssl.default-dh-param 2048
 
 defaults
   log             global
@@ -264,7 +265,7 @@ frontend http-in
   
 frontend https-in
   mode tcp
-  bind :443
+  bind :443 ssl crt /etc/ssl/new/app2.payofix.com.pem
   
   # all domains of Rails applications
   <% node[:haproxy][:rails_applications].each do |app_name, app_config| -%>
@@ -298,7 +299,8 @@ frontend https-in
   use_backend rails_app_servers_ssl if rails_applications_ssl
   <% end -%>
   <% unless node[:haproxy][:php_applications].empty? || node[:haproxy][:php_backends].empty? -%>
-  use_backend php_app_servers_ssl if php_applications_ssl
+  #use_backend php_app_servers_ssl if php_applications_ssl
+  use_backend php_app_servers if php_applications_ssl
   <% end -%>
   <% unless node[:haproxy][:nodejs_applications].empty? || node[:haproxy][:nodejs_backends].empty? -%>
   use_backend nodejs_app_servers_ssl if nodejs_applications_ssl
