@@ -159,9 +159,14 @@ backend java_servers_ssl
   <% end -%>
 <% end -%>
 
+backend letsencrypt-backend                 #--cert
+  server letsencrypt 127.0.0.1:54321        #--cert
+
 frontend http-in
   bind :80
-  
+
+  acl letsencrypt-acl path_beg /.well-known/acme-challenge/    #--cert
+
   # all domains of Rails applications
   <% node[:haproxy][:rails_applications].each do |app_name, app_config| -%>
     <% app_config['domains'].each do |domain| -%>
@@ -226,6 +231,8 @@ frontend http-in
       <% end -%>
     <% end -%>
   <% end -%>
+
+  use_backend letsencrypt-backend if letsencrypt-acl            #--cert
 
   <% unless node[:haproxy][:php_applications].empty? || node[:haproxy][:php_backends].empty? -%>
     <% node[:haproxy][:php_applications].each do |app_name, app_config| -%>
